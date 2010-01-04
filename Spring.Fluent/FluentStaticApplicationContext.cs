@@ -136,6 +136,13 @@ namespace Spring.Fluent
             return definitionBuilder;
         }
 
+		public ObjectDefinitionBuilder<T> RegisterObject<T>(string name, string parentName)
+        {
+            var definitionBuilder = new ObjectDefinitionBuilder<T>(this, this.objectDefinitionFactory, name, parentName);
+            builderList.Add(definitionBuilder);
+            return definitionBuilder;
+        }
+
         internal ObjectDefinitionBuilder<T> RegisterObjectDefinitionBuilder<T>(ObjectDefinitionBuilder<T> definitionBuilder)
         {
             builderList.Add(definitionBuilder);

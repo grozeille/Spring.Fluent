@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -34,14 +34,24 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" />
     <Reference Include="Spring.Core, Version=1.3.0.20349, Culture=neutral, PublicKeyToken=65e474d141e25e07">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Spring.NET\bin\net\2.0\release\Spring.Core.dll</HintPath>
+      <HintPath>..\..\..\libs\Spring.NET\bin\net\2.0\release\Spring.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq.Expressions, Version=7.12.125.14100, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\System.Linq.Expressions\System.Linq.Expressions\bin\Debug\System.Linq.Expressions.dll</HintPath>
+      <HintPath>..\..\..\libs\System.Linq.Expressions\System.Linq.Expressions.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Package>nunit</Package>
+    </Reference>
+    <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libs\Spring.NET\bin\net\2.0\release\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop, Version=1.3.0.20349, Culture=neutral, PublicKeyToken=65e474d141e25e07">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\libs\Spring.NET\bin\net\2.0\release\Spring.Aop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +61,7 @@
     <Compile Include="Service.cs" />
     <Compile Include="TestSpringFlluent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestAdvice.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spring.Fluent\Spring.Fluent.csproj">
