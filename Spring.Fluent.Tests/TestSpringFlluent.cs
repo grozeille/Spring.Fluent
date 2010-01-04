@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Spring.Objects.Factory.Config;
+using Spring.Aop.Support;
+using Spring.Aop.Framework;
+using System.Text.RegularExpressions;
+using AopAlliance.Aop;
 
 namespace Spring.Fluent.Tests
 {
@@ -21,7 +25,7 @@ namespace Spring.Fluent.Tests
             context.RegisterObject<Repository>("Repository")
                 .AddPropertyValue(i => i.Name, "Mathias");
 
-            context.Refresh();
+			context.Refresh();
 
             var result = context.GetObject<IService>("Service")
                 .SayHello();
@@ -95,12 +99,55 @@ namespace Spring.Fluent.Tests
         [Test]
         public void TestAop()
         {
+			var context = new FluentStaticApplicationContext();
+			
+            context.RegisterObject<Repository>("TargetRepository")
+                .AddPropertyValue(i => i.Name, "Mathias");
+
+			context.RegisterObject<RegularExpressionMethodPointcutAdvisor>("Advisor")
+				.AddPostProcessAfterInitialization(delegate(RegularExpressionMethodPointcutAdvisor i)
+				{
+					i.Pattern = ".*SayHello";
+					return i;
+				})
+				.AddPropertyValue(i => i.Advice, new TestAdvice());
+			
+			context.RegisterObject<ProxyFactoryObject>("Repository")
+				.AddPostProcessBeforeInitialization(delegate(ProxyFactoryObject pfo)
+				{
+					pfo.AddAdvice(context.GetObject<IAdvice>("Advisor"));
+					pfo.Target = context.GetObject<IRepository>("TargetRepository");
+					return pfo;
+				});
+			
+            context.Refresh();
+
+            var result = context.GetObject<IService>("Service")
+                .SayHello();
+
+            Assert.AreEqual("Intercepted: Hello Mathias!", result);
         }
 
         [Test]
         public void TestParentChild()
         {
+			var context = new FluentStaticApplicationContext();
 
+			context.RegisterObject<Service>("TemplateService")
+				.AddPropertyReference(i => i.Repository, "Repository")
+				.SetAbstract(true);
+			
+            context.RegisterObject<Service>("Service", "TemplateService");
+
+            context.RegisterObject<Repository>("Repository")
+                .AddPropertyValue(i => i.Name, "Mathias");
+
+            context.Refresh();
+
+            var result = context.GetObject<IService>("Service")
+                .SayHello();
+
+            Assert.AreEqual("Hello Mathias!", result);
         }
 
         [Test]

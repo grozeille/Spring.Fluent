@@ -18,24 +18,32 @@ namespace Spring.Fluent
         private FluentStaticApplicationContext context;
 
         private IObjectDefinitionFactory factory;
-
-        public ObjectDefinitionBuilder(FluentStaticApplicationContext context, IObjectDefinitionFactory factory, string name)
+		
+		private ObjectDefinitionBuilder(FluentStaticApplicationContext context, IObjectDefinitionFactory factory)
         {
-            this.name = name;
             this.factory = factory;
             this.context = context;
-            this.builder = ObjectDefinitionBuilder.RootObjectDefinition(factory, typeof(T));
             this.OnBeforeInitializationObjects = new List<ObjectPostProcessor>();
             this.OnAfterInitializationObjects = new List<ObjectPostProcessor>();
+			this.builder = ObjectDefinitionBuilder.RootObjectDefinition(factory, typeof(T));
         }
 
-        private ObjectDefinitionBuilder(FluentStaticApplicationContext context, IObjectDefinitionFactory factory)
+        public ObjectDefinitionBuilder(FluentStaticApplicationContext context, IObjectDefinitionFactory factory, string name)
+			:this(context, factory)
         {
-            this.factory = factory;
-            this.context = context;
+            this.name = name;
             this.builder = ObjectDefinitionBuilder.RootObjectDefinition(factory, typeof(T));
-            this.OnBeforeInitializationObjects = new List<ObjectPostProcessor>();
-            this.OnAfterInitializationObjects = new List<ObjectPostProcessor>();
+        }
+		
+		public ObjectDefinitionBuilder(FluentStaticApplicationContext context, IObjectDefinitionFactory factory, string name, string parentName)
+			:this(context, factory)
+        {
+            this.name = name;
+            this.builder = ObjectDefinitionBuilder.ChildObjectDefinition(factory, parentName);
+			            
+			// Workaround to bypass ObjectDefinitionBuilder limitations.
+			// Does not affect normal processing, because working as ObjectDefinitionBuilder itself
+            this.builder.ObjectDefinition.ObjectType = typeof(T);
         }
 
         public string Name { get { return this.name; } }
