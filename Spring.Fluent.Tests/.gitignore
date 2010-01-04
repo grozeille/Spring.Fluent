@@ -1,5 +1,8 @@
 bin
 obj
 _ReSharper
+test-results
 *.resharper.user
 *.suo
+*.userprefs
+*.pidb
